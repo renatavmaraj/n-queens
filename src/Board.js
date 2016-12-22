@@ -156,17 +156,35 @@ displayBoard([
     //
     // test if a specific major diagonal on this board contains a conflict
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
+      var corrector = 0;
+      if(majorDiagonalColumnIndexAtFirstRow < 0) {
+        corrector = Math.abs(majorDiagonalColumnIndexAtFirstRow);
+      }
       var boardSize = this.get('n');
       var acc =0;
       var fullBoard = [];
       for(var i = 0; i < boardSize; i++) {
         fullBoard.push(this.get(i));
       }
-      return false;
+      var diagonalLength = boardSize - majorDiagonalColumnIndexAtFirstRow;
+      if(corrector > 0) {
+        diagonalLength = boardSize - corrector;
+      }
+      for(var corrector = 0; corrector < diagonalLength; corrector++) {
+        acc += fullBoard[0 + corrector][majorDiagonalColumnIndexAtFirstRow + corrector];
+      }
+      return acc>1;
     },
 
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function() {
+      var boardSize = this.get('n');
+      var diagonalNumber = -boardSize + 1;
+      for(var i = boardSize - 1; i > diagonalNumber; i--) {
+        if(this.hasMajorDiagonalConflictAt[i]){
+          return true;
+        }
+      }
       return false; // fixme
     },
 
